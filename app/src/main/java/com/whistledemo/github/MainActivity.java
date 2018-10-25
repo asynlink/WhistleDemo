@@ -1,6 +1,7 @@
 package com.whistledemo.github;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,9 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.whistledemo.github.data.Comment;
 import com.whistledemo.github.data.Issue;
 import com.whistledemo.github.data.IssuesViewModel;
-import com.whistledemo.github.http.Controller;
+import com.whistledemo.github.http.IssueController;
 import com.whistledemo.github.http.NetworkCallback;
 import com.whistledemo.github.http.NetworkStatus;
 
@@ -21,7 +23,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
-    RecyclerViewAdapter recyclerViewAdapter;
+    IssuesAdapter recyclerViewAdapter;
 
     IssuesViewModel mModel;
 
@@ -32,14 +34,18 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewAdapter = new RecyclerViewAdapter();
+        recyclerViewAdapter = new IssuesAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
 
-        recyclerViewAdapter.setOnItemClickListener(new RecyclerViewAdapter.ClickListener() {
+        recyclerViewAdapter.setOnItemClickListener(new IssuesAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
                 long issueId = (long)v.getTag();
                 Log.i("Wilbur", " =========== date " + getDate(issueId));
+
+                Intent myIntent = new Intent(MainActivity.this, CommentActivity.class);
+                myIntent.putExtra("issue_number", getIssueNumber(issueId));
+                startActivity(myIntent);
             }
 
             @Override
@@ -59,17 +65,26 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    private long getIssueNumber(long issueId) {
+        Hashtable<Long, Issue> table = mModel.getIssueList();
+        if (table != null && table.containsKey(issueId)) {
+            Issue issue = table.get(issueId);
+            return issue.getNumber();
+        }
+        return -1;
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         if (NetworkStatus.getInstance(getApplicationContext()).isOnline()) {
-            Controller controller = new Controller();
+            IssueController controller = new IssueController();
             controller.start(new MyNetworkCallback());
         }
     }
 
     public class MyNetworkCallback implements NetworkCallback {
-        public void onResult(List<Issue> issues) {
+        public void onIssueResult(List<Issue> issues) {
             if (issues != null) {
                 //Sort in decending order!
                 Collections.sort(issues, new Comparator<Issue>() {
@@ -87,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
                 mModel.setIssueList(table);
                 recyclerViewAdapter.setData(issues);
             }
+        }
+
+        public void onCommentResult(List<Comment> comments) {
         }
 
         public void onFailure() {

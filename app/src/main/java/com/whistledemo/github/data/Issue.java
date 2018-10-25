@@ -8,6 +8,11 @@ public class Issue {
     String updated_at;
     String body;
     String comments_url;
+    long number;
+
+    public long getNumber() {
+        return number;
+    }
 
     public long getId() {
         return id;

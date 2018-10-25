@@ -14,7 +14,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Controller implements Callback<List<Issue>> {
+public class IssueController implements Callback<List<Issue>> {
     static final String BASE_URL = "https://api.github.com/repos/";
 
     NetworkCallback mActivityCallback;
@@ -43,7 +43,7 @@ public class Controller implements Callback<List<Issue>> {
             List<Issue> issueList = response.body();
             Log.i("Wilbur", " ====================  " + issueList.size());
             if (mActivityCallback != null) {
-                mActivityCallback.onResult(issueList);
+                mActivityCallback.onIssueResult(issueList);
             }
 //            changesList.forEach(change -> System.out.println(change.subject));
         } else {

@@ -11,29 +11,29 @@ import com.whistledemo.github.data.Issue;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class IssuesAdapter extends RecyclerView.Adapter<IssuesAdapter.ViewHolder> {
     private List<Issue> mIssues;
 
     private static final int MAX_LENGTH = 140;
 
     private static ClickListener clickListener;
 
-    public RecyclerViewAdapter() {
+    public IssuesAdapter() {
         mIssues = new ArrayList<>();
     }
 
     @Override
-    public RecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                             int viewType) {
+    public IssuesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                       int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.issue_layout, parent, false);
 
-        RecyclerViewAdapter.ViewHolder viewHolder = new RecyclerViewAdapter.ViewHolder(view);
+        IssuesAdapter.ViewHolder viewHolder = new IssuesAdapter.ViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(IssuesAdapter.ViewHolder holder, int position) {
         Issue issue = mIssues.get(position);
         holder.title.setText(issue.getTitle());
         if (issue.getBody().length() > MAX_LENGTH) {
@@ -45,7 +45,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public void setOnItemClickListener(ClickListener clickListener) {
-        RecyclerViewAdapter.clickListener = clickListener;
+        IssuesAdapter.clickListener = clickListener;
     }
 
     @Override
