@@ -16,6 +16,7 @@ import com.whistledemo.github.http.NetworkStatus;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Hashtable;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,11 +51,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String getDate(long issueId) {
-        List<Issue>issues = mModel.getIssueList();
-        for (Issue issue : issues) {
-            if (issue.getId() == issueId) {
-                return issue.getUpdated_at();
-            }
+        Hashtable<Long, Issue> table = mModel.getIssueList();
+        if (table != null) {
+            Issue issue = table.get(issueId);
+            return issue.getUpdated_at();
         }
         return null;
     }
@@ -78,8 +78,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 Collections.reverse(issues);
-                
-                mModel.setIssueList(issues);
+
+                Hashtable<Long, Issue> table = new Hashtable<Long, Issue>();
+                for (Issue issue : issues) {
+                    table.put(issue.getId(), issue);
+                }
+
+                mModel.setIssueList(table);
                 recyclerViewAdapter.setData(issues);
             }
         }
