@@ -33,7 +33,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void onBindViewHolder(CommentAdapter.ViewHolder holder, int position) {
         Comment comment = mComments.get(position);
-        holder.author.setText(comment.getUser().getLogin());
+        holder.author.setText("User: "+ comment.getUser().getLogin());
         holder.body.setText(comment.getBody());
     }
 

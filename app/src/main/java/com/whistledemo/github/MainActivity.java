@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.whistledemo.github.data.Comment;
 import com.whistledemo.github.data.Issue;
@@ -23,6 +23,8 @@ import java.util.Hashtable;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String INTENT_NUMBER = "issue_number";
+
     RecyclerView recyclerView;
     IssuesAdapter recyclerViewAdapter;
 
@@ -44,10 +46,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(int position, View v) {
                 long issueId = (long)v.getTag();
-                Log.i("Wilbur", " =========== date " + getDate(issueId));
 
                 Intent myIntent = new Intent(MainActivity.this, CommentActivity.class);
-                myIntent.putExtra("issue_number", getIssueNumber(issueId));
+                myIntent.putExtra(INTENT_NUMBER, getIssueNumber(issueId));
                 startActivity(myIntent);
             }
 
@@ -59,17 +60,8 @@ public class MainActivity extends AppCompatActivity {
         mModel = ViewModelProviders.of(this).get(IssuesViewModel.class);
     }
 
-    private String getDate(long issueId) {
-        Hashtable<Long, Issue> table = mModel.getIssueList();
-        if (table != null) {
-            Issue issue = table.get(issueId);
-            return issue.getUpdated_at();
-        }
-        return null;
-    }
-
     private long getIssueNumber(long issueId) {
-        Hashtable<Long, Issue> table = mModel.getIssueList();
+        Hashtable<Long, Issue> table = mModel.getIssueTable();
         if (table != null && table.containsKey(issueId)) {
             Issue issue = table.get(issueId);
             return issue.getNumber();
@@ -80,9 +72,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        if (NetworkStatus.getInstance(getApplicationContext()).isOnline()) {
-            IssueController controller = new IssueController();
-            controller.start(new MyNetworkCallback());
+        if (mModel.getIssueList() != null) {
+            recyclerViewAdapter.setData(mModel.getIssueList());
+        } else {
+            if (NetworkStatus.getInstance(getApplicationContext()).isOnline()) {
+                IssueController controller = new IssueController();
+                controller.start(new MyNetworkCallback(), getResources().getString(R.string.base_url));
+            } else {
+                Toast.makeText(getApplicationContext(), "Please double check your network connection!", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -102,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
                     table.put(issue.getId(), issue);
                 }
 
-                mModel.setIssueList(table);
+                mModel.setIssueTable(table);
+                mModel.setIssueList(issues);
                 recyclerViewAdapter.setData(issues);
             }
         }
@@ -110,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
         public void onCommentResult(List<Comment> comments) {
         }
 
-        public void onFailure() {
-
+        public void onFailure(String message) {
+            Toast.makeText(getApplicationContext(), "Unable to retrieve data. " + message, Toast.LENGTH_LONG).show();
         }
     }
 }

@@ -8,5 +8,5 @@ import java.util.List;
 public interface NetworkCallback {
     public void onIssueResult(List<Issue> issues);
     public void onCommentResult(List<Comment> comments);
-    public void onFailure();
+    public void onFailure(String message);
 }

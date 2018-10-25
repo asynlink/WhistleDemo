@@ -35,7 +35,7 @@ public class IssuesAdapter extends RecyclerView.Adapter<IssuesAdapter.ViewHolder
     @Override
     public void onBindViewHolder(IssuesAdapter.ViewHolder holder, int position) {
         Issue issue = mIssues.get(position);
-        holder.title.setText(issue.getTitle());
+        holder.title.setText("Issue: " + issue.getTitle());
         if (issue.getBody().length() > MAX_LENGTH) {
             holder.body.setText(issue.getBody().substring(0, MAX_LENGTH));
         } else {
