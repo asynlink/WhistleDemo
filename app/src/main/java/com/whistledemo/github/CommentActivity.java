@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.whistledemo.github.adapters.CommentAdapter;
 import com.whistledemo.github.data.Comment;
 import com.whistledemo.github.data.CommentViewModel;
 import com.whistledemo.github.data.Issue;

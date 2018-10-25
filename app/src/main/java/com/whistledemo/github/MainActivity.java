@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.whistledemo.github.adapters.IssuesAdapter;
 import com.whistledemo.github.data.Comment;
 import com.whistledemo.github.data.Issue;
 import com.whistledemo.github.data.IssuesViewModel;

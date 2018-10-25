@@ -1,4 +1,4 @@
-package com.whistledemo.github;
+package com.whistledemo.github.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.whistledemo.github.R;
 import com.whistledemo.github.data.Comment;
 
 import java.util.ArrayList;
@@ -13,8 +14,6 @@ import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
     private List<Comment> mComments;
-
-    private static IssuesAdapter.ClickListener clickListener;
 
     public CommentAdapter() {
         mComments = new ArrayList<>();
@@ -37,10 +36,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         holder.body.setText(comment.getBody());
     }
 
-    public void setOnItemClickListener(IssuesAdapter.ClickListener clickListener) {
-        CommentAdapter.clickListener = clickListener;
-    }
-
     @Override
     public int getItemCount() {
         return mComments.size();
@@ -51,26 +46,15 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView author;
         public TextView body;
 
         public ViewHolder(View view) {
             super(view);
-            view.setOnClickListener(this);
             author = view.findViewById(R.id.author);
             body = view.findViewById(R.id.body);
         }
-
-        @Override
-        public void onClick(View v) {
-            clickListener.onItemClick(getAdapterPosition(), v);
-        }
-    }
-
-    public interface ClickListener {
-        void onItemClick(int position, View v);
-        void onItemLongClick(int position, View v);
     }
 }

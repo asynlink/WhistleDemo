@@ -1,4 +1,4 @@
-package com.whistledemo.github;
+package com.whistledemo.github.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.whistledemo.github.R;
 import com.whistledemo.github.data.Issue;
 
 import java.util.ArrayList;
