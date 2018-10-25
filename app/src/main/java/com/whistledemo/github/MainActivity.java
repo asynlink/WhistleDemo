@@ -14,6 +14,8 @@ import com.whistledemo.github.http.Controller;
 import com.whistledemo.github.http.NetworkCallback;
 import com.whistledemo.github.http.NetworkStatus;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -69,6 +71,14 @@ public class MainActivity extends AppCompatActivity {
     public class MyNetworkCallback implements NetworkCallback {
         public void onResult(List<Issue> issues) {
             if (issues != null) {
+                //Sort in decending order!
+                Collections.sort(issues, new Comparator<Issue>() {
+                    public int compare(Issue issue1, Issue issue2) {
+                        return issue1.getUpdated_at().compareTo(issue2.getUpdated_at());
+                    }
+                });
+                Collections.reverse(issues);
+                
                 mModel.setIssueList(issues);
                 recyclerViewAdapter.setData(issues);
             }
