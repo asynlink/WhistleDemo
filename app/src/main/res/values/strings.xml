@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WhistleDemo</string>
+    <string name="issue_title">RxJava Issues:</string>
+    <string name="comment_title">Comments</string>
 </resources>
